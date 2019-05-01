@@ -80,6 +80,8 @@ public class PlayerController : MonoBehaviour {
 }
 ```
 
+For reference, here's what PlayerController.cs should look like: https://github.com/shivpkumar/roll-a-ball_bose/blob/complete/Assets/Scripts/PlayerController.cs
+
 ### Step 3: Connect Bose AR glasses to the Unity scene
 
 If you were to hit play right now (go on, try it!), nothing works. Even if you plug in your Bose AR glasses via USB to your computer, it still won't work. The reason is because there's no logic in the scene that tells Unity to look for connected Bose devices when the scene starts. In order to do this, we'll have to add a couple new objects to the scene:
@@ -105,3 +107,5 @@ Your scene should look something like this:
 ### Step 4: Try it out!
 
 Now, when you press play with your Bose AR glasses connected via USB, the Bose UI panel should show that its found your "Bose Frames". Click that button, wait for it to connect, and start playing. You should be able to collect all the pick ups by simply tilting your head left and right, forward and backward. Nice work!
+
+**Note:** a completed version of this tutorial can be found on the `complete` branch in this repo. If you're too lazy to do all the above, just switch over to this branch and open it up in Unity. Assuming your Bose AR glasses are connected to your computer via USB, everything should just work out of the box.
