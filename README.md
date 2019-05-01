@@ -22,3 +22,60 @@ Well, that was easy. Now let's do something a bit more interesting: roll the bal
 ### Step 1: Install the Bose AR SDK for Unity
 
 The first thing we'll need to do is add the latest version of the Bose AR SDK to your project. Head on over to the Bose Developer Portal and download the latest Unity SDK: https://developer.bose.com/bose-ar/bose-ar-downloads (you will have to create an account if this is your first time visiting the portal). Once downloaded, import the SDK package into Unity via Assets >> Import Package >> Custom Package.
+
+### Step 2: Hook up Player to Bose AR Glasses
+
+Next, let's update our Player object (the ball) with the logic to move as we tilt our Bose AR glasses in different directions. Open up `PlayerController.cs` and update it with the following lines of code:
+
+```csharp
+using Bose.Wearable;
+.
+.
+.
+
+public class PlayerController : MonoBehaviour {
+    
+    .
+    .
+    .
+    WearableControl wearableControl;
+    
+    void Start() {
+        .
+        .
+        .
+        
+        wearableControl = WearableControl.Instance;
+
+        WearableRequirement requirement = GetComponent<WearableRequirement>();
+        if (requirement == null) {
+            requirement = gameObject.AddComponent<WearableRequirement>();
+        }
+        requirement.EnableSensor(SensorId.Rotation);
+        requirement.SetSensorUpdateInterval(SensorUpdateInterval.EightyMs);
+    }
+    
+    void FixedUpdate() {
+        if (wearableControl.ConnectedDevice == null) {
+            return;
+        }
+
+        SensorFrame sensorFrame = wearableControl.LastSensorFrame;
+
+        float moveHorizontal = sensorFrame.rotation.value.z;
+        float moveVertical = sensorFrame.rotation.value.x;
+        
+        // Disable keyboard behavior
+        // float moveHorizontal = Input.GetAxis("Horizontal");
+        // float moveVertical = Input.GetAxis("Vertical");
+        
+        .
+        .
+        .
+    }
+    
+    .
+    .
+    .
+}
+```
