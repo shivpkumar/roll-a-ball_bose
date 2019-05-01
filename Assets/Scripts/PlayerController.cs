@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Bose.Wearable;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
@@ -11,6 +12,7 @@ public class PlayerController : MonoBehaviour {
     int count;
     GameObject[] getCount;
     int pickUpCount;
+    WearableControl wearableControl;
 
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -20,11 +22,30 @@ public class PlayerController : MonoBehaviour {
         winText.gameObject.SetActive(false);
         getCount = GameObject.FindGameObjectsWithTag("Pick Up");
         pickUpCount = getCount.Length;
+
+        wearableControl = WearableControl.Instance;
+
+        WearableRequirement requirement = GetComponent<WearableRequirement>();
+        if (requirement == null) {
+            requirement = gameObject.AddComponent<WearableRequirement>();
+        }
+        requirement.EnableSensor(SensorId.Rotation);
+        requirement.SetSensorUpdateInterval(SensorUpdateInterval.EightyMs);
     }
 
     void FixedUpdate() {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
+        if (wearableControl.ConnectedDevice == null) {
+            return;
+        }
+
+        SensorFrame sensorFrame = wearableControl.LastSensorFrame;
+
+        float moveHorizontal = sensorFrame.rotation.value.z;
+        float moveVertical = sensorFrame.rotation.value.x;
+
+        // Disable keyboard behavior
+        // float moveHorizontal = Input.GetAxis("Horizontal");
+        // float moveVertical = Input.GetAxis("Vertical");
 
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
